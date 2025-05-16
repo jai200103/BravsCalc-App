@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>BravsCalc - Moddalo Mode 🤪😂</title>
+    <title>BROVS-Calc - Crazy Mode 🤪😂</title>
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet" />
@@ -201,7 +201,7 @@
 </head>
 <body>
     <div class="calc-container">
-        <h2>BravsCalc 🤪 Moddalo Mode</h2>
+        <h2>BRVOS-Calc 🤪 Crazy Mode</h2>
 
         <form th:action="@{/calculate}" method="post" id="calcForm" autocomplete="off">
             <div>
@@ -209,7 +209,7 @@
                     type="number"
                     step="any"
                     name="num1"
-                    placeholder="1 st Number Enter cheyy raa hooka"
+                    placeholder="1st Number Enter cheyy mundu"
                     th:value="${num1}"
                     required
                     id="num1"
@@ -222,7 +222,7 @@
                     type="number"
                     step="any"
                     name="num2"
-                    placeholder="2 nd number enter chey raa hooka"
+                    placeholder="2nd number enter chey Fast Gaa"
                     th:value="${num2}"
                     required
                     id="num2"
@@ -231,10 +231,10 @@
             </div>
 
             <select name="operation" required id="operation">
-                <option value="" disabled th:selected="${operation == null}">Eti cheyyalo cheppi denginchukko</option>
-                <option value="add" th:selected="${operation == 'add'}">➕ kalapaala</option>
-                <option value="subtract" th:selected="${operation == 'subtract'}">➖ teyyala</option>
-                <option value="multiply" th:selected="${operation == 'multiply'}">✖ eesukola</option>
+                <option value="" disabled th:selected="${operation == null}">Em cheyyalo cheppu</option>
+                <option value="add" th:selected="${operation == 'add'}">➕ add Cheyyala</option>
+                <option value="subtract" th:selected="${operation == 'subtract'}">➖ Sub Cheyyala</option>
+                <option value="multiply" th:selected="${operation == 'multiply'}">✖ Mul Cheyyala</option>
                 <option value="divide" th:selected="${operation == 'divide'}">➗ divide cheyyala</option>
             </select>
 
@@ -244,7 +244,7 @@
         <div id="crazyMsg" class="funny-message" style="margin-top: 25px; font-weight: 900; font-size: 1.2rem; min-height: 40px;"></div>
 
         <div th:if="${result != null}" class="result" id="resultDisplay">
-            Sarle eedaku, Ide answeruu: <span th:text="${result}"></span>
+            Sarle Feel Avvaku, Ididgo answeruu: <span th:text="${result}"></span>
         </div>
 
         <div th:if="${error != null}" class="error" th:text="${error}" id="errorDisplay"></div>
@@ -252,33 +252,33 @@
 
     <!-- Meme popup -->
     <div id="memePopup" aria-live="polite" role="alert" aria-atomic="true" aria-relevant="all">
-        <img src="https://i.imgur.com/1pBdtDc.gif" alt="Funny Meme" />
+        <img src="https://media1.tenor.com/m/XoKrWp9HFoMAAAAd/proud-brahmanandam.gif" alt="Funny Meme" />
     </div>
 
     <script>
         (() => {
             const funnyMsgsNum1 = [
-                "Moddalo numberu fast gaa type cheyy 🪄",
-                "Tondarga enter cheyyra neela kaliga leenu",
-                "Entha sepu bey",
-                "Orey guta hooka type cheyy, chosthavem",
+                "Edo oka numberu fast gaa type cheyy",
+                "Tondarga enter cheyyandi Meekula kaliga leenu",
+                "Ballari Bro - Number Type Cheyy bro",
+                "Orey Chanti Number Type Cheyy raa",
                 "Chusindi Chaalu type cheyy"
             ];
 
             const funnyMsgsNum2 = [
-                "nanna eistinuu, type cheyy nanna",
-                "challe navvindi type cheyy",
+                "nanna Einsteinuu, type cheyy nanna",
+                "Nannu Recchagokku number type cheyy",
                 "Neekem gold medel ivvaru eedoti type cheyy",
                 "aalochinchindi chaaalu inka type cheyy",
                 "Sir, hello sir, aalochinchindi chaalu Type cheyyandi"
             ];
 
             const crazyCalculateMsgs = [
-                "Sulla neek telidra, velimudra lanjodukuvi raa sarle idigo ",
-                "musti calculation ee cheyyalekapothunnav inkem chestav raa life lo",
-                "deeniki kuda nen kaavala, emundi lee inka paduko",
-                "nuvvu carrer meeda focus cheyyalamma",
-                "neeku kuttha chekkesthar lee idi kuda cheyyakapothe"
+                "Mee nanna anthantha etti chadivisthe nuvvu idi kuda cheyyalekapothunnava...",
+                "Musti calculation ee cheyyalekapothunnav inkem chestav raa life lo",
+                "Deeniki kuda nen kaavala, Emundi lee inka paduko",
+                "Nuvvu Carrer meeda focus cheyyalamma",
+                "Good Teesukelli LKG lo Padeyyandi"
 				
             ];
 
@@ -340,17 +340,17 @@
                 // Show meme popup with bounce animation
                 memePopup.classList.add('visible');
 
-                // Hide meme popup after 2.5 seconds
+                // Hide meme popup after 3.5 seconds
                 setTimeout(() => {
                     memePopup.classList.remove('visible');
-                }, 2500);
+                }, 5000);
 
                 // After 2.5 seconds, submit the form to backend and remove crazy message
                 setTimeout(() => {
                     crazyMsg.textContent = '';
                     crazyMsg.classList.remove('visible');
                     form.submit();
-                }, 2500);
+                }, 5000);
             });
         })();
     </script>
