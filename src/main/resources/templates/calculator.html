@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BravsCalc - Moddalo Mode 🤪😂</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet" />
+
+	<style>
+	    /* Body and background styles */
+	    body {
+	        margin: 0;
+	        height: 100vh;
+	        background: linear-gradient(135deg, #ff4e00, #d100e6, #1e0b52);
+	        font-family: 'Orbitron', sans-serif;
+	        display: flex;
+	        justify-content: center;
+	        align-items: center;
+	        color: #fff;
+	        padding: 50px;
+	        overflow-x: hidden;
+	        position: relative;
+	        text-align: center;
+	    }
+
+	    /* Calculator container with dynamic background */
+	    .calc-container {
+	        background: rgba(0, 0, 0, 0.75);
+	        border-radius: 30px;
+	        box-shadow: 0 0 50px 10px rgba(255, 255, 255, 0.1);
+	        width: 420px;
+	        padding: 40px;
+	        backdrop-filter: blur(15px) saturate(180%);
+	        text-align: center;
+	        position: relative;
+	        transition: transform 0.3s ease, box-shadow 0.3s ease;
+	    }
+
+	    /* Heading with neon glow */
+	    h2 {
+	        font-size: 3rem;
+	        font-weight: 700;
+	        margin-bottom: 30px;
+	        color: #0ff;
+	       
+	        letter-spacing: 2px;
+	        font-family: 'Orbitron', Press Start 2P;
+	    }
+
+	    /* Form layout for inputs and select */
+	    form {
+	        display: flex;
+	        flex-direction: column;
+	        gap: 18px;
+	    }
+
+	    /* Style for input fields */
+	    input[type="number"], select {
+	        padding: 15px;
+	        border-radius: 20px;
+	        border: none;
+	        font-size: 1.2rem;
+	        font-weight: 600;
+	        outline: none;
+	        font-family: 'Roboto Mono', monospace;
+	        background: #222;
+	        color: #ff4e00;
+	        box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
+	        transition: box-shadow 0.4s ease;
+	    }
+
+	    input[type="number"]:focus, select:focus {
+	        box-shadow: inset 0 0 15px #ff4e00;
+	        animation: shake 0.4s ease;
+	    }
+
+	    /* Button style with gradient effect */
+	    button {
+	        padding: 16px 0;
+	        font-size: 1.4rem;
+	        font-weight: 700;
+	        border: none;
+	        border-radius: 30px;
+	        background: linear-gradient(45deg, #ff4e00, #d100e6);
+	        color: #fff;
+	        cursor: pointer;
+	        box-shadow: 0 0 20px #ff4e00;
+	        transition: background 0.4s ease, transform 0.3s ease;
+	        font-family: 'Roboto Mono', monospace;
+	        letter-spacing: 1.5px;
+	        user-select: none;
+	    }
+
+	    button:hover {
+	        background: linear-gradient(45deg, #d100e6, #ff4e00);
+	        box-shadow: 0 0 25px #ff4e00;
+	        transform: scale(1.05);
+	    }
+
+	    /* Style for result and error */
+	    .result, .error {
+	        margin-top: 35px;
+	        font-size: 1.5rem;
+	        font-weight: 700;
+	        text-shadow: 0 0 10px #ff4e00;
+	        min-height: 40px;
+	        opacity: 1;
+	        transition: opacity 0.5s ease;
+	        font-family: 'Roboto Mono', monospace;
+	    }
+
+	    .error {
+	        color: #ff6f61;
+	        text-shadow: 0 0 8px #ff6f61;
+	    }
+
+	    /* Funny messages */
+	    .funny-message {
+	        font-style: italic;
+	        font-size: 1rem;
+	        color: #ffdd57;
+	        margin-top: 8px;
+	        min-height: 28px;
+	        height: 28px;
+	        transition: opacity 0.4s ease;
+	        opacity: 0;
+	        user-select: none;
+	    }
+
+	    .funny-message.visible {
+	        opacity: 1;
+	    }
+
+	    /* Shake animation for focus */
+	    @keyframes shake {
+	        0%, 100% { transform: translateX(0); }
+	        25% { transform: translateX(-6px) rotate(-5deg); }
+	        50% { transform: translateX(6px) rotate(5deg); }
+	        75% { transform: translateX(-6px) rotate(-5deg); }
+	    }
+
+	    /* Bounce animation for crazy message */
+	    @keyframes bounceIn {
+	        0% {
+	            opacity: 0;
+	            transform: scale(0.3) translateY(-100%);
+	        }
+	        50% {
+	            opacity: 1;
+	            transform: scale(1.05) translateY(20%);
+	        }
+	        70% {
+	            transform: scale(0.9) translateY(-10%);
+	        }
+	        100% {
+	            opacity: 1;
+	            transform: scale(1) translateY(0);
+	        }
+	    }
+
+	    #crazyMsg.visible {
+	        animation: bounceIn 0.8s forwards;
+	    }
+
+	    /* Meme GIF container */
+	    #memePopup {
+	        position: fixed;
+	        bottom: 20px;
+	        right: 20px;
+	        width: 160px;
+	        height: 160px;
+	        background: rgba(255, 255, 255, 0.85);
+	        border-radius: 20px;
+	        box-shadow: 0 0 15px rgba(255, 221, 87, 0.9);
+	        display: flex;
+	        justify-content: center;
+	        align-items: center;
+	        opacity: 0;
+	        pointer-events: none;
+	        transition: opacity 0.3s ease;
+	        user-select: none;
+	        z-index: 9999;
+	    }
+
+	    #memePopup.visible {
+	        opacity: 1;
+	        pointer-events: auto;
+	        animation: bounceIn 0.8s forwards;
+	    }
+
+	    #memePopup img {
+	        max-width: 140px;
+	        max-height: 140px;
+	        border-radius: 15px;
+	        user-select: none;
+	    }
+	</style>
+
+</head>
+<body>
+    <div class="calc-container">
+        <h2>BravsCalc 🤪 Moddalo Mode</h2>
+
+        <form th:action="@{/calculate}" method="post" id="calcForm" autocomplete="off">
+            <div>
+                <input
+                    type="number"
+                    step="any"
+                    name="num1"
+                    placeholder="1 st Number Enter cheyy raa hooka"
+                    th:value="${num1}"
+                    required
+                    id="num1"
+                />
+                <div id="msgNum1" class="funny-message"></div>
+            </div>
+
+            <div>
+                <input
+                    type="number"
+                    step="any"
+                    name="num2"
+                    placeholder="2 nd number enter chey raa hooka"
+                    th:value="${num2}"
+                    required
+                    id="num2"
+                />
+                <div id="msgNum2" class="funny-message"></div>
+            </div>
+
+            <select name="operation" required id="operation">
+                <option value="" disabled th:selected="${operation == null}">Eti cheyyalo cheppi denginchukko</option>
+                <option value="add" th:selected="${operation == 'add'}">➕ kalapaala</option>
+                <option value="subtract" th:selected="${operation == 'subtract'}">➖ teyyala</option>
+                <option value="multiply" th:selected="${operation == 'multiply'}">✖ eesukola</option>
+                <option value="divide" th:selected="${operation == 'divide'}">➗ divide cheyyala</option>
+            </select>
+
+            <button type="submit" id="calcBtn">✨ Answer Kaavalentra</button>
+        </form>
+
+        <div id="crazyMsg" class="funny-message" style="margin-top: 25px; font-weight: 900; font-size: 1.2rem; min-height: 40px;"></div>
+
+        <div th:if="${result != null}" class="result" id="resultDisplay">
+            Sarle eedaku, Ide answeruu: <span th:text="${result}"></span>
+        </div>
+
+        <div th:if="${error != null}" class="error" th:text="${error}" id="errorDisplay"></div>
+    </div>
+
+    <!-- Meme popup -->
+    <div id="memePopup" aria-live="polite" role="alert" aria-atomic="true" aria-relevant="all">
+        <img src="https://i.imgur.com/1pBdtDc.gif" alt="Funny Meme" />
+    </div>
+
+    <script>
+        (() => {
+            const funnyMsgsNum1 = [
+                "Moddalo numberu fast gaa type cheyy 🪄",
+                "Tondarga enter cheyyra neela kaliga leenu",
+                "Entha sepu bey",
+                "Orey guta hooka type cheyy, chosthavem",
+                "Chusindi Chaalu type cheyy"
+            ];
+
+            const funnyMsgsNum2 = [
+                "nanna eistinuu, type cheyy nanna",
+                "challe navvindi type cheyy",
+                "Neekem gold medel ivvaru eedoti type cheyy",
+                "aalochinchindi chaaalu inka type cheyy",
+                "Sir, hello sir, aalochinchindi chaalu Type cheyyandi"
+            ];
+
+            const crazyCalculateMsgs = [
+                "Sulla neek telidra, velimudra lanjodukuvi raa sarle idigo ",
+                "musti calculation ee cheyyalekapothunnav inkem chestav raa life lo",
+                "deeniki kuda nen kaavala, emundi lee inka paduko",
+                "nuvvu carrer meeda focus cheyyalamma",
+                "neeku kuttha chekkesthar lee idi kuda cheyyakapothe"
+				
+            ];
+
+            const msgNum1 = document.getElementById('msgNum1');
+            const msgNum2 = document.getElementById('msgNum2');
+            const crazyMsg = document.getElementById('crazyMsg');
+            const form = document.getElementById('calcForm');
+            const calcBtn = document.getElementById('calcBtn');
+            const resultDisplay = document.getElementById('resultDisplay');
+            const errorDisplay = document.getElementById('errorDisplay');
+            const memePopup = document.getElementById('memePopup');
+
+            function showMessage(element, messages) {
+                const msg = messages[Math.floor(Math.random() * messages.length)];
+                element.textContent = msg;
+                element.classList.add('visible');
+            }
+
+            function clearMessage(element) {
+                element.textContent = '';
+                element.classList.remove('visible');
+            }
+
+            document.getElementById('num1').addEventListener('focus', () => {
+                showMessage(msgNum1, funnyMsgsNum1);
+                shakeInput('num1');
+            });
+            document.getElementById('num1').addEventListener('blur', () => {
+                clearMessage(msgNum1);
+            });
+
+            document.getElementById('num2').addEventListener('focus', () => {
+                showMessage(msgNum2, funnyMsgsNum2);
+                shakeInput('num2');
+            });
+            document.getElementById('num2').addEventListener('blur', () => {
+                clearMessage(msgNum2);
+            });
+
+            function shakeInput(id) {
+                const el = document.getElementById(id);
+                el.style.animation = 'shake 0.4s ease-in-out';
+                el.addEventListener('animationend', () => {
+                    el.style.animation = '';
+                }, { once: true });
+            }
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault(); // prevent immediate submit
+
+                // Hide previous result/error
+                if (resultDisplay) resultDisplay.style.opacity = 0;
+                if (errorDisplay) errorDisplay.style.opacity = 0;
+
+                // Show crazy calculating message with bounce animation
+                showMessage(crazyMsg, crazyCalculateMsgs);
+                crazyMsg.classList.add('visible');
+
+                // Show meme popup with bounce animation
+                memePopup.classList.add('visible');
+
+                // Hide meme popup after 2.5 seconds
+                setTimeout(() => {
+                    memePopup.classList.remove('visible');
+                }, 2500);
+
+                // After 2.5 seconds, submit the form to backend and remove crazy message
+                setTimeout(() => {
+                    crazyMsg.textContent = '';
+                    crazyMsg.classList.remove('visible');
+                    form.submit();
+                }, 2500);
+            });
+        })();
+    </script>
+</body>
+</html>
